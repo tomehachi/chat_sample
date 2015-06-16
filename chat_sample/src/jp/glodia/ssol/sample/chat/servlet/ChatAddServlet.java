@@ -58,6 +58,7 @@ public class ChatAddServlet extends HttpServlet {
         // セッションにメッセージを登録.
         req.getSession().setAttribute("message", message.toString());
 
+        // Viewにリダイレクト
         res.sendRedirect("/chat/view");
     }
 
