@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import jp.glodia.ssol.sample.chat.dao.ChatDAO;
+import jp.glodia.ssol.sample.chat.util.StringUtil;
 
 public class ChatAddServlet extends HttpServlet {
 
@@ -21,8 +22,8 @@ public class ChatAddServlet extends HttpServlet {
             throws ServletException, IOException {
 
         req.setCharacterEncoding("UTF-8");
-        String name = (String)req.getParameter("name");
-        String chat = (String)req.getParameter("chat");
+        String name = StringUtil.sanitize((String)req.getParameter("name"));
+        String chat = StringUtil.sanitize((String)req.getParameter("chat"));
 
         try {
             (new ChatDAO()).addChatData(name, chat);
