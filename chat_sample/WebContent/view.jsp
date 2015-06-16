@@ -17,6 +17,9 @@
 
         <hr>
 
+        <%-- エラーメッセージ --%>
+        <font color="red"><%= request.getSession().getAttribute("message") == null ? "" : request.getSession().getAttribute("message") %></font>
+
         <%-- フォーム部分 --%>
         <form action="/chat/add" method="POST">
             名前 : <input type="text" name="name" value="<%= request.getSession().getAttribute("name") == null ? "" : request.getSession().getAttribute("name") %>"><br>
@@ -37,6 +40,7 @@
                     "<td>"+ dto.id +"</td>"+
                     "<td>"+ dto.name +"</td>"+
                     "<td>"+ dto.chat +"</td>"+
+                    "<td>"+ dto.ip + "</td>"+
                     "<td>"+ new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(dto.regDate) +"</td>"+
                     "</tr>"
             );

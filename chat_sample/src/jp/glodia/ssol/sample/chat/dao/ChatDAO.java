@@ -31,6 +31,8 @@ public class ChatDAO extends DataAccessObject {
             dto.id = rs.getInt("id");
             dto.name = rs.getString("name");
             dto.chat = rs.getString("chat");
+            dto.likeCount = rs.getInt("like_count");
+            dto.ip = rs.getString("ip");
             dto.regDate = new Date(rs.getTimestamp("reg_date").getTime());
             result.add(dto);
         }
@@ -51,11 +53,19 @@ public class ChatDAO extends DataAccessObject {
      * @return 追加件数
      * @throws SQLException SQL例外
      */
-    public int addChatData(String name, String chat) throws SQLException {
+    public int addChatData(String name, String chat, String ip) throws SQLException {
         Statement statement = connection.createStatement();
 
         int result = statement.executeUpdate(
-                "INSERT INTO chat_log (name, chat, reg_date ) VALUES ('"+ name +"','"+ chat +"', CURRENT_TIME)");
+                "INSERT INTO chat_log "
+                        +"( name"
+                        +", chat"
+                        +", ip"
+                        +", reg_date ) VALUES ("
+                        +"'"+ name +"',"
+                        +"'"+ chat +"',"
+                        +"'"+ ip + "'"
+                        +", CURRENT_TIME)");
 
         if(result != 1) {
             throw new IllegalArgumentException("INSERT に失敗したようです.");
@@ -76,7 +86,7 @@ public class ChatDAO extends DataAccessObject {
      */
     public static void main(String...args) throws SQLException {
         // 書き込み
-        (new ChatDAO()).addChatData("なまえ", "チャットメッセージ");
+        (new ChatDAO()).addChatData("なまえ", "チャットメッセージ", "000.000.000.000");
 
         // 全件検索＋表示
         List<ChatLogDto> records = (new ChatDAO()).getAllChatData();

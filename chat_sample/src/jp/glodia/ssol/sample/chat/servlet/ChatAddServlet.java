@@ -22,18 +22,41 @@ public class ChatAddServlet extends HttpServlet {
             throws ServletException, IOException {
 
         req.setCharacterEncoding("UTF-8");
+
+        StringBuffer message = new StringBuffer();
+
         String name = StringUtil.sanitize((String)req.getParameter("name"));
         String chat = StringUtil.sanitize((String)req.getParameter("chat"));
 
-        try {
-            (new ChatDAO()).addChatData(name, chat);
+        if(name.length() > 10) {
+            message.append("<p>名前は10文字以内におさめて下さい.</p>");
+            name = "";
 
-        } catch (SQLException e) {
-            throw new ServletException("チャットログの追加に失敗しました.", e);
+        } else if(name.length() < 1) {
+            message.append("<p>名前が入力されていません.</p>");
+        }
+
+        if(chat.length() > 130) {
+            message.append("<p>チャットメッセージは130文字に収めてください.</p>");
+
+        } else if(chat.length() < 1) {
+            message.append("<p>チャットメッセージが入力されていません.</p>");
+        }
+
+        if(message.length() == 0) {
+            try {
+                (new ChatDAO()).addChatData(name, chat, req.getRemoteAddr());
+
+            } catch (SQLException e) {
+                throw new ServletException("チャットログの追加に失敗しました.", e);
+            }
         }
 
         // セッションに名前を登録.
         req.getSession().setAttribute("name", name);
+
+        // セッションにメッセージを登録.
+        req.getSession().setAttribute("message", message.toString());
 
         res.sendRedirect("/chat/view");
     }
